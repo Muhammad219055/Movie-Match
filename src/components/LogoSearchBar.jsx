@@ -8,10 +8,27 @@ import FilterPopUp from "./FilterPopUp";
 
 const LogoSearchBar = () => {
   const { fetchMovies, fetchedMovies } = useContext(MovieContext);
+
   const [animateButtons, setAnimateButtons] = useState(false);
-  const [filterPopUpShouldAppear, setFilterPopUpShouldAppear] = useState(false);
+  const [filterPopUpShouldAppear, setFilterPopUpShouldAppear] = useState(
+    JSON.parse(localStorage.getItem("filterPopUpShouldAppear")) || false
+  );
   const [fetching, setFetching] = useState(false);
-  const [gridShouldAppear, setGridShouldAppear] = useState(false);
+  const [gridShouldAppear, setGridShouldAppear] = useState(
+    JSON.parse(localStorage.getItem("gridShouldAppear")) || false
+  );
+
+  useEffect(() => {
+    localStorage.setItem(
+      "filterPopUpShouldAppear",
+      JSON.stringify(filterPopUpShouldAppear)
+    );
+  }, [filterPopUpShouldAppear]);
+
+  useEffect(() => {
+    localStorage.setItem("gridShouldAppear", JSON.stringify(gridShouldAppear));
+  }, [gridShouldAppear]);
+
   const handleFetchMovies = async () => {
     setFetching(true);
     await fetchMovies();
@@ -53,13 +70,16 @@ const LogoSearchBar = () => {
           transition={{ duration: 0.5 }}
           whileHover={{ scale: 1.05 }}
           className="filter-btn"
-          onClick={() => setFilterPopUpShouldAppear((prev) => !prev)}
+          onClick={() => filterPopUp()}
         >
           <Filter />
         </motion.button>
       </div>
 
-       <FilterPopUp shouldBeVisible={filterPopUpShouldAppear} setShouldBeVisible={setFilterPopUpShouldAppear}/>
+      <FilterPopUp
+        shouldBeVisible={filterPopUpShouldAppear}
+        setShouldBeVisible={setFilterPopUpShouldAppear}
+      />
       {fetching && <Loader />}
       {gridShouldAppear && <MoviesGrid />}
     </motion.div>

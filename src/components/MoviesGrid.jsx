@@ -1,20 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import MovieCard from "./MovieCard";
 import { MovieContext } from "../context/MovieContext";
 import { motion } from "framer-motion";
-import MovieDetail from "./MovieDetail";
+import { useNavigate } from "react-router-dom";
 
 const MoviesGrid = () => {
-  const { fetchedMovies } = useContext(MovieContext);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [viewMoreClicked, setViewMoreClicked] = useState(false);
+  const navigate = useNavigate();
+  const { fetchedMovies, setSelectedMovie, fetchMovieDetails } =
+    useContext(MovieContext);
+
+  const [viewMoreClicked, setViewMoreClicked] = useState(
+    JSON.parse(localStorage.getItem("viewMoreClicked")) || false
+  );
+
+  useEffect(() => {
+    localStorage.setItem("viewMoreClicked", JSON.stringify(viewMoreClicked));
+  }, [viewMoreClicked]);
+
+  useEffect(() => {
+    fetchMovieDetails();
+  }, [fetchedMovies, fetchMovieDetails]);
 
   const handlePosterClick = (movie) => {
-    setSelectedMovie(movie);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedMovie(null);
+    setSelectedMovie(movie.id);
+    navigate(`/movie/${movie.id}`);
+    console.log(movie);
   };
 
   const handleViewMore = () => {
@@ -52,7 +62,7 @@ const MoviesGrid = () => {
         className="show-more-movies-button"
         initial={{ opacity: 0, x: 400 }}
         whileInView={{ opacity: 1, x: 0 }}
-        whileHover={{y:10}}
+        whileHover={{ y: 10 }}
         transition={{ duration: 0.6, delay: 0.3, type: "spring", damping: 10 }}
         onClick={handleViewMore}
       >

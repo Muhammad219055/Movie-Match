@@ -1,11 +1,14 @@
-import "./App.css";
-import Home from "./pages/Home";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import MovieProvider from "./context/MovieContext";
+import AppRoutes from "./routes";
 
 function App() {
   return (
     <MovieProvider>
-      <Home />
+      <Router>
+        <AppRoutes />
+      </Router>
     </MovieProvider>
   );
 }

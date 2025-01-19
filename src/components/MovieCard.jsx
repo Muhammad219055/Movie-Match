@@ -15,7 +15,7 @@ const MovieCard = ({ movie, onClick }) => {
         whileHover={{ scale: 1.05, boxShadow: "0px 0px 10px black" }}
         transition={{ duration: 0.3, type: "spring" }}
         exit={{ y: -10000, opacity: 0 }}
-        onClick={onClick} 
+        onClick={onClick}
         src={baseImageUrl}
         className="moviePoster"
         alt=""
